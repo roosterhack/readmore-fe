@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { Container } from "react-bootstrap";
-import { ModalComponent } from "../modal/Modal";
+import ModalComponent from "../modal/Modal";
 
 const HeroComponent = styled.header`
   padding: 5rem 0;

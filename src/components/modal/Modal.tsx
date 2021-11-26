@@ -1,5 +1,5 @@
 import { Modal, Button, InputGroup, FormControl } from "react-bootstrap";
-// import axios from "axios";
+import axios from "axios";
 import { useState, useContext } from "react";
 import styled from "styled-components";
 // import { useNavigate } from "react-router-dom";
@@ -11,29 +11,52 @@ interface ModalProps {
   isSignupFlow: boolean;
 }
 
-const ErrorMessage = styled.p`
-  color: red;
-`;
+// const ErrorMessage = styled.div`
+//   color: red;
+// `;
 
-export const ModalComponent = ({ text, variant, isSignupFlow }: ModalProps) => {
+const ModalComponent = ({ text, variant, isSignupFlow }: ModalProps) => {
   const [show, setShow] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMsg, setErrorMsg] = useState("");
+  const [error, setError] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
   // const navigate = useNavigate();
 
+  const handleClick = async () => {
+    let response;
+    setIsLoading(true);
+    const signUpOrLogin = isSignupFlow ? "signup" : "login";
+
+    try {
+      const res = await axios.post(
+        `http://localhost:8000/auth/${signUpOrLogin}`,
+        {
+          email,
+          password,
+        }
+      );
+      console.log(res);
+    } catch (err) {
+      setError(err as any);
+    }
+  };
+
+  console.log(show);
   return (
     <>
       <Button
+        onClick={handleShow}
         variant={variant}
         size="lg"
-        style={{ marginRight: "1rem" }}
-        onClick={() => setShow(true)}
+        style={{ marginRight: "1rem", padding: "0.5rem 3rem" }}
       >
         {text}
       </Button>
 
-      <Modal show={show} onHide={() => setShow(false)}>
+      <Modal show={show} onHide={handleClose}>
         <Modal.Header>
           <Modal.Title>{text}</Modal.Title>
         </Modal.Header>
@@ -54,15 +77,18 @@ export const ModalComponent = ({ text, variant, isSignupFlow }: ModalProps) => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </InputGroup>
-          {errorMsg && <ErrorMessage>{errorMsg}</ErrorMessage>}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShow(false)}>
+          <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary">{text}</Button>
+          <Button variant="primary" onClick={handleClick}>
+            {text}
+          </Button>
         </Modal.Footer>
       </Modal>
     </>
   );
 };
+
+export default ModalComponent;
