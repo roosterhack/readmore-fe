@@ -18,8 +18,6 @@ export const Nav = () => {
     navigate("/");
   };
 
-  console.log(state);
-
   return (
     <Navbar>
       <NavItem>

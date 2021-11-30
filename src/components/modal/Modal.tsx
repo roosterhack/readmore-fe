@@ -46,13 +46,16 @@ const ModalComponent = ({ text, variant, isSignupFlow }: ModalProps) => {
       data: {
         id: res.data.data.id,
         email: res.data.data.email,
+        customerStripeId: res.data.data.customerStripeId,
       },
       loading: false,
       error: null,
     });
     setIsLoading(false);
     localStorage.setItem("token", res.data.data.token);
-    axios.defaults.headers.common["authorization"] = `Bearer ${res.data.token}`;
+    axios.defaults.headers.common[
+      "authorization"
+    ] = `Bearer ${res.data.data.token}`;
     navigate("/articles");
   };
 
